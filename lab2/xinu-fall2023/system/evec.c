@@ -162,6 +162,7 @@ void	trap (
 		kprintf("Interrupt number 6 has been generated.\n");
 		if (invalidopcount < 4) {
 			invalidopcount++;
+			// kprintf("invalidopcount: %d\n", invalidopcount);
 		} else {
 			panic("Invalid opcode fault happened 4 times!");
 		}
