@@ -168,6 +168,7 @@ void	trap (
 		}
 		return;
 	}
+	
 	/* Disable interrupts */
 
 	mask = disable();

@@ -451,10 +451,10 @@ _Xint33:
 	pushl	%ebp
 	movl	%esp,%ebp
 	pushal
-	movl	%esp, %eax
-	pushl	%eax
-	pushl	$33
-	jmp	Xtrap
+	; movl	%esp, %eax
+	; pushl	%eax
+	; pushl	$33
+	; jmp	Xtrap
 	
 	.globl  _Xint34			/* available for ext. interrupt	*/
 _Xint34:

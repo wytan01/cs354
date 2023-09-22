@@ -268,6 +268,12 @@ extern	status	lfsetup(struct lflcblk *);
 /* in file lftruncate.c */
 extern	status	lftruncate(struct lflcblk *);
 
+/* in file listancestors.c */
+extern  int32 listancestors(pid32 pid);
+
+/* in file listancestorsx.c */
+extern  syscall listancestorsx(pid32 pid);
+
 /* in file lpgetc.c */
 extern	devcall	lpgetc(struct dentry *);
 

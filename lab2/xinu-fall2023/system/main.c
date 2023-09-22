@@ -19,6 +19,7 @@ process	main(void)
 	kprintf("%d\n", x);
 	kprintf("divzerocount: %d\n", divzerocount);
 	asm("int $6");
+	kprintf("after synchronous interrupt\n");
 
 
 	return OK;
