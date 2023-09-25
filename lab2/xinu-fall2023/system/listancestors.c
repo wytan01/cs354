@@ -25,11 +25,11 @@ int32   listancestors(pid32     pid)
                         prptr = &proctab[ppid];
                 }
         
-        /* Get the parent id */
-        ppid = prptr->prparent;
+                /* Get the parent id */
+                ppid = prptr->prparent;
 
                 numancestor++;
-                kprintf("Ancestor process ID of PID %d: %d\n", pid, ppid);
+                // kprintf("Ancestor process ID of PID %d: %d\n", pid, ppid);
 
                 if (ppid == 0) {
                         break;

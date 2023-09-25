@@ -14,13 +14,15 @@ process	main(void)
 	// invalidop6();
 
 	/* Test for 3.3: Generate synchronouse interrupts */
-	int x = 3;
-	asm("int $0");
-	kprintf("%d\n", x);
-	kprintf("divzerocount: %d\n", divzerocount);
-	asm("int $6");
-	kprintf("after synchronous interrupt\n");
+	// int x = 3;
+	// asm("int $0");
+	// kprintf("%d\n", x);
+	// kprintf("divzerocount: %d\n", divzerocount);
+	// asm("int $6");
+	// kprintf("after synchronous interrupt\n");
 
+	/* Test for 4.2: Software layers*/
+	kprintf("listancestors: %d\n", listancestorsx(getpid()));
 
 	return OK;
     

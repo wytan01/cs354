@@ -4,6 +4,9 @@
 
 local	int newpid();
 
+char *pruserstack;		/* User stack address of curr proc */
+char *prsyscallkstack;	/* Kernel stack address of curr proc */
+
 /*------------------------------------------------------------------------
  *  create  -  Create a process to start running a function on x86
  *------------------------------------------------------------------------
@@ -35,6 +38,11 @@ pid32	create(
 		return SYSERR;
 	}
 
+	prsyscallkstack = getstk(8192);
+	if (prsyscallkstack == (char *) SYSERR ) {
+		return SYSERR;
+	}
+
 	prcount++;
 	prptr = &proctab[pid];
 
@@ -42,6 +50,7 @@ pid32	create(
 	prptr->prstate = PR_SUSP;	/* Initial state is suspended	*/
 	prptr->prprio = priority;
 	prptr->prstkbase = (char *)saddr;
+	prptr->prkstack = prsyscallkstack;
 	prptr->prstklen = ssize;
 	prptr->prname[PNMLEN-1] = NULLCH;
 	for (i=0 ; i<PNMLEN-1 && (prptr->prname[i]=name[i])!=NULLCH; i++)

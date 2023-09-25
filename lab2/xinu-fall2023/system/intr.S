@@ -12,6 +12,8 @@
 	.globl	spurious_irq7
 	.globl	spurious_irq15
 	.extern divzerocount # global variable from initialize.c
+	.extern pruserstack # global var of current process' user stack address 
+	.extern prsyscallkstack # global var of current process' kernel stack address 
 
 /*------------------------------------------------------------------------
  * disable  -  Disable interrupts and return the previous state
@@ -108,7 +110,7 @@ _Xint0:
 	movl	%esp,%ebp
 	pushal
 	movl	divzerocount, %ecx 	/* Move var into register */
-	cmp		$10, %ecx		/* Compare divzerocount to 10 */
+	cmpl		$10, %ecx		/* Compare divzerocount to 10 */
 	jl		increment
 	call 	trap0	/* Call trap0 function if divzerocount == 10 */
 	; movl	%esp, %eax
@@ -448,14 +450,109 @@ _Xint32:
 
 	.globl  _Xint33			/* available for ext. interrupt	*/
 _Xint33:
-	pushl	%ebp
-	movl	%esp,%ebp
-	pushal
-	; movl	%esp, %eax
-	; pushl	%eax
-	; pushl	$33
-	; jmp	Xtrap
+	;movl	%esp, %ebp			/* Use ebp to access the values */
+
+	/* Checking if there are 3 arguments */
+	cmpl 	$8, %ebx		/* Check if system call number is 8 */
+	je		procrange_syscall	/* Wrapper function = procrangex */
+
+
+	movl	prsyscallkstack, %edi	/* copy kernel stack into EDI */
+
+	/* Copy EIP value into kernel */
+	movl	4(%esp), %esi		/* Move EIP value into ESI */
+	subl	$4, %edi			/* Move kernel stack's pointer 1 space down */
+	movl	%esi, %edi			/* Copied EIP into kernel */
+
+	/* Copy CS value into kernel */
+	movl	8(%esp), %esi		/* Move CS value into ESI */
+	subl	$4, %edi			/* Move kernel stack's pointer 1 space down */
+	movl	%esi, %edi			/* Copied CS into kernel */
+
+	/* Copy EFLAGS value into kernel */
+	movl	12(%esp), %esi		/* Move EFLAGS value into ESI */
+	subl	$4, %edi			/* Move kernel stack's pointer 1 space down */
+	movl	%esi, %edi			/* Copied EFLAGS into kernel */
+
+	movl	%esp, pruserstack	/* Copy value of ESP into global var */
+	movl	%edi, %esp			/* Switch from user to kernel */
+
+	/* Compare EBX */
+	cmpl 	$5, %ebx		/* Check if system call number is 5 */
+	je		getpid_syscall	/* Wrapper function = getpidx */
+
+	cmpl 	$6, %ebx		/* Check if system call number is 6 */
+	je		listancestors_syscall	/* Wrapper function = listancestorsx */
+
+	cmpl 	$7, %ebx		/* Check if system call number is 7 */
+	je		chprio_syscall	/* Wrapper function = chpriox */
 	
+getpid_syscall:
+	call	getpid			/* No arguments, so call function directly */
+	jmp		cleanup
+
+
+listancestors_syscall:
+	pushl	%ecx		/* Push param onto kernel stack */
+	call	listancestors 	/* Call function */
+	addl	$4, %esp	/* Clean up the stack by moving stack pointer */
+	jmp cleanup
+
+chprio_syscall:
+	pushl	%edx		/* Push param 2 onto kernel stack */
+	pushl	%ecx		/* Push param 1 onto kernel stack */
+	call	chprio 		/* Call function */
+	addl	$8, %esp	/* Clean up the stack by moving stack pointer */
+	jmp cleanup
+
+
+procrange_syscall:
+	subl	$4, %edi		/* Move kernel stack's pointer 1 space down */
+	movl	4(%esp), %edi		/* Copy 3rd argument to kernel stack */
+
+	movl	prsyscallkstack, %edi	/* copy kernel stack into EDI */
+
+	/* Copy EIP value into kernel */
+	movl	8(%esp), %esi		/* Move EIP value into ESI */
+	subl	$4, %edi			/* Move kernel stack's pointer 1 space down */
+	movl	%esi, %edi			/* Copied EIP into kernel */
+
+	/* Copy CS value into kernel */
+	movl	12(%esp), %esi		/* Move CS value into ESI */
+	subl	$4, %edi			/* Move kernel stack's pointer 1 space down */
+	movl	%esi, %edi			/* Copied CS into kernel */
+
+	/* Copy EFLAGS value into kernel */
+	movl	16(%esp), %esi		/* Move EFLAGS value into ESI */
+	subl	$4, %edi			/* Move kernel stack's pointer 1 space down */
+	movl	%esi, %edi			/* Copied EFLAGS into kernel */
+
+	movl	%esp, pruserstack	/* Copy value of ESP into global var */
+	movl	%edi, %esp			/* Switch from user to kernel */
+
+	pushl	%edx		/* Push param 2 onto kernel stack */
+	pushl	%ecx		/* Push param 1 onto kernel stack */
+	call	procrange 		/* Call function */
+	addl	$12, %esp	/* Clean up the stack by moving stack pointer */
+	jmp cleanup
+
+cleanup:
+	movl	pruserstack, %esp	/* ESP points to user stack */
+
+	/* Copy EIP, CS, EFLAGS back to user stack */
+	subl	$4, %esp		/* Move ESP one space down */
+	movl	%edi, %esp		/* Copy EFLAGS */
+
+	subl	$4, %esp		/* Move ESP one space down */
+	movl	4(%edi), %esp		/* Copy CS */
+
+	subl	$4, %esp		/* Move ESP one space down */
+	movl	8(%edi), %esp		/* Copy EIP */
+
+	sti		/* Enable interrupts */
+	iret
+
+
 	.globl  _Xint34			/* available for ext. interrupt	*/
 _Xint34:
 	pushl	%ebp

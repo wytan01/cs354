@@ -342,6 +342,9 @@ extern	void	pdumph(struct netpacket *);
 /* in file platinit.c */
 extern	void	platinit(void);
 
+/* in file procrange.c */
+extern syscall procrange(uint16, pid32, pid32);
+
 /* in file ptclear.c */
 extern	void	_ptclear(struct ptentry *, uint16, int32 (*)(int32));
 
