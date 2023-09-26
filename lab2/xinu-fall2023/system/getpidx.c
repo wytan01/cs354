@@ -1,4 +1,4 @@
-/* listancestorsx.c - listancestorsx */
+/* getpidx.c - getpidx */
 
 #include <xinu.h>
 
@@ -6,15 +6,15 @@ extern char *pruserstack;
 extern char *prkstack;
 
 /*------------------------------------------------------------------------
- *  listancestorsx  -  Output all ancestor processes and returned their number
+ *  getpidx  -  Output current process' pid
  *------------------------------------------------------------------------
  */
-syscall listancestorsx(pid32 pid) {
+syscall getpidx() {
 
-    int numancestors;
+    int pid;
 
-    /* Setting listancestorsx's syscall number to 6 */
-    int syscall = 6; 
+    /* Setting getpidx's syscall number to 5 */
+    int syscall = 5; 
 
     struct  procent *prptr = &proctab[getpid()];; /* Pointer to proc. table entry */
     //pruserstack = prptr->prstkbase; /* Get the top of user stack */
@@ -22,18 +22,15 @@ syscall listancestorsx(pid32 pid) {
 
 
     /* Move system call number into EBX */
-    /* Move first argument into ECX*/
-
     asm("movl %1, %%ebx\n\t"
-        "movl %2, %%ecx\n\t"
         "int $33 \n\t"
         "movl %%eax, %0\n\t"
-        : "=r" (numancestors)
-        : "r" (syscall), "r" (pid)
-        : "%ebx", "%ecx", "%esi", "%edi");
+        : "=r" (pid)
+        : "r" (syscall)
+        : "%ebx", "%esi", "%edi");
     /* : Output Operand */
     /* : Input Operand - syscall number and pid*/
     /* : Adding EBX and ECX into clobber list */
         /* Using the clobber list obviates the need to save/restore register values used by the system call dispatcher. */
-    return numancestors;
+    return pid;
 }

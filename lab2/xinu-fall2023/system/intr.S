@@ -13,7 +13,7 @@
 	.globl	spurious_irq15
 	.extern divzerocount # global variable from initialize.c
 	.extern pruserstack # global var of current process' user stack address 
-	.extern prsyscallkstack # global var of current process' kernel stack address 
+	.extern prkstack # global var of current process' kernel stack address 
 
 /*------------------------------------------------------------------------
  * disable  -  Disable interrupts and return the previous state
@@ -450,29 +450,28 @@ _Xint32:
 
 	.globl  _Xint33			/* available for ext. interrupt	*/
 _Xint33:
+	call 	disable			/* Disable interrupts */
 	;movl	%esp, %ebp			/* Use ebp to access the values */
-
-	/* Checking if there are 3 arguments */
-	cmpl 	$8, %ebx		/* Check if system call number is 8 */
-	je		procrange_syscall	/* Wrapper function = procrangex */
-
-
-	movl	prsyscallkstack, %edi	/* copy kernel stack into EDI */
+	movl	prkstack, %edi	/* copy kernel stack into EDI */
 
 	/* Copy EIP value into kernel */
-	movl	4(%esp), %esi		/* Move EIP value into ESI */
+	movl	(%esp), %esi		/* Move EIP value into ESI */
 	subl	$4, %edi			/* Move kernel stack's pointer 1 space down */
 	movl	%esi, %edi			/* Copied EIP into kernel */
 
 	/* Copy CS value into kernel */
-	movl	8(%esp), %esi		/* Move CS value into ESI */
+	movl	4(%esp), %esi		/* Move CS value into ESI */
 	subl	$4, %edi			/* Move kernel stack's pointer 1 space down */
 	movl	%esi, %edi			/* Copied CS into kernel */
 
 	/* Copy EFLAGS value into kernel */
-	movl	12(%esp), %esi		/* Move EFLAGS value into ESI */
+	movl	8(%esp), %esi		/* Move EFLAGS value into ESI */
 	subl	$4, %edi			/* Move kernel stack's pointer 1 space down */
 	movl	%esi, %edi			/* Copied EFLAGS into kernel */
+
+	/* Check if there are 3 arguments */
+	cmpl 	$8, %ebx		/* Check if system call number is 8 */
+	je		procrange_syscall	/* Wrapper function = procrangex */
 
 	movl	%esp, pruserstack	/* Copy value of ESP into global var */
 	movl	%edi, %esp			/* Switch from user to kernel */
@@ -507,25 +506,10 @@ chprio_syscall:
 
 
 procrange_syscall:
-	subl	$4, %edi		/* Move kernel stack's pointer 1 space down */
-	movl	4(%esp), %edi		/* Copy 3rd argument to kernel stack */
-
-	movl	prsyscallkstack, %edi	/* copy kernel stack into EDI */
-
-	/* Copy EIP value into kernel */
-	movl	8(%esp), %esi		/* Move EIP value into ESI */
+	/* Copy 3rd argument into kernel */
+	movl	12(%esp), %esi		/* Move 3rd argument into ESI */
 	subl	$4, %edi			/* Move kernel stack's pointer 1 space down */
-	movl	%esi, %edi			/* Copied EIP into kernel */
-
-	/* Copy CS value into kernel */
-	movl	12(%esp), %esi		/* Move CS value into ESI */
-	subl	$4, %edi			/* Move kernel stack's pointer 1 space down */
-	movl	%esi, %edi			/* Copied CS into kernel */
-
-	/* Copy EFLAGS value into kernel */
-	movl	16(%esp), %esi		/* Move EFLAGS value into ESI */
-	subl	$4, %edi			/* Move kernel stack's pointer 1 space down */
-	movl	%esi, %edi			/* Copied EFLAGS into kernel */
+	movl	%esi, %edi			/* Copied 3rd argument into kernel */
 
 	movl	%esp, pruserstack	/* Copy value of ESP into global var */
 	movl	%edi, %esp			/* Switch from user to kernel */
@@ -541,7 +525,7 @@ cleanup:
 
 	/* Copy EIP, CS, EFLAGS back to user stack */
 	subl	$4, %esp		/* Move ESP one space down */
-	movl	%edi, %esp		/* Copy EFLAGS */
+	movl	(%edi), %esp		/* Copy EFLAGS */
 
 	subl	$4, %esp		/* Move ESP one space down */
 	movl	4(%edi), %esp		/* Copy CS */
@@ -549,19 +533,36 @@ cleanup:
 	subl	$4, %esp		/* Move ESP one space down */
 	movl	8(%edi), %esp		/* Copy EIP */
 
-	sti		/* Enable interrupts */
+	call enable		/* Enable interrupts */
 	iret
 
 
 	.globl  _Xint34			/* available for ext. interrupt	*/
 _Xint34:
-	pushl	%ebp
-	movl	%esp,%ebp
-	pushal
-	movl	%esp, %eax
-	pushl	%eax
-	pushl	$34
-	jmp	Xtrap
+	cli
+	pushl	12(%esp) /* Push arg 3 */
+	pushl	%edx	/* Push arg 2 */
+	pushl	%ecx	/* Push arg 1 */
+	call procrange
+	addl	$12, %esp 	/* shift esp to "clear" arguments */
+
+	/* copy everything one position above */
+	movl	8(%esp), %ecx	/* Copy EFLAGS */
+	movl	%ecx, 12(%esp)
+	movl	4(%esp), %ecx	/* Copy CS */
+	movl	%ecx, 8(%esp)
+	movl	(%esp), %ecx	/* Copy EIP */
+	movl	%ecx, 4(%esp)
+	addl	$4, %esp		/* clear stack */
+	sti
+	iret
+	; pushl	%ebp
+	; movl	%esp,%ebp
+	; pushal
+	; movl	%esp, %eax
+	; pushl	%eax
+	; pushl	$34
+	; jmp	Xtrap
 
 	.globl  _Xint35			/* available for ext. interrupt	*/
 _Xint35:

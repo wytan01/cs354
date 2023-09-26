@@ -18,6 +18,9 @@ extern	status	bufinit(void);
 /* in file chprio.c */
 extern	pri16	chprio(pid32, pri16);
 
+/* in file chpriox.c */
+extern	syscall	chpriox(pid32, pri16);
+
 /* in file clkupdate.S */
 extern	uint32	clkcount(void);
 
@@ -112,6 +115,9 @@ extern	char	*getmem(uint32);
 
 /* in file getpid.c */
 extern	pid32	getpid(void);
+
+/* in file getpidx.c */
+extern	syscall	getpidx(void);
 
 /* in file getprio.c */
 extern	syscall	getprio(pid32);
@@ -344,6 +350,9 @@ extern	void	platinit(void);
 
 /* in file procrange.c */
 extern syscall procrange(uint16, pid32, pid32);
+
+/* in file procrangex.c */
+extern syscall procrangex(uint16, pid32, pid32);
 
 /* in file ptclear.c */
 extern	void	_ptclear(struct ptentry *, uint16, int32 (*)(int32));
