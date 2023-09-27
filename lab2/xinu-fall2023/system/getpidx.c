@@ -2,7 +2,7 @@
 
 #include <xinu.h>
 
-extern char *pruserstack;
+extern char *prustack;
 extern char *prkstack;
 
 /*------------------------------------------------------------------------
@@ -16,10 +16,8 @@ syscall getpidx() {
     /* Setting getpidx's syscall number to 5 */
     int syscall = 5; 
 
-    struct  procent *prptr = &proctab[getpid()];; /* Pointer to proc. table entry */
-    //pruserstack = prptr->prstkbase; /* Get the top of user stack */
+    struct  procent *prptr = &proctab[getpid()]; /* Pointer to proc. table entry */
     prkstack = prptr->prsyscallkstack; /* Get the top of kernel stack */
-
 
     /* Move system call number into EBX */
     asm("movl %1, %%ebx\n\t"
@@ -32,5 +30,8 @@ syscall getpidx() {
     /* : Input Operand - syscall number and pid*/
     /* : Adding EBX and ECX into clobber list */
         /* Using the clobber list obviates the need to save/restore register values used by the system call dispatcher. */
+    
+    prptr->pruserstack = prustack; /* Transferred to global var by ESP */
+    
     return pid;
 }

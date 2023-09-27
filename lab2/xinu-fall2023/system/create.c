@@ -4,7 +4,7 @@
 
 local	int newpid();
 
-char *pruserstack;		/* User stack address of curr proc */
+char *prustack;		/* User stack address of curr proc */
 char *prkstack;	/* Kernel stack address of curr proc */
 
 /*------------------------------------------------------------------------
@@ -50,7 +50,6 @@ pid32	create(
 	prptr->prstate = PR_SUSP;	/* Initial state is suspended	*/
 	prptr->prprio = priority;
 	prptr->prstkbase = (char *)saddr;
-	prptr->prsyscallkstack = prkstack;
 	prptr->prstklen = ssize;
 	prptr->prname[PNMLEN-1] = NULLCH;
 	for (i=0 ; i<PNMLEN-1 && (prptr->prname[i]=name[i])!=NULLCH; i++)
@@ -63,6 +62,9 @@ pid32	create(
 	prptr->prdesc[0] = CONSOLE;
 	prptr->prdesc[1] = CONSOLE;
 	prptr->prdesc[2] = CONSOLE;
+	/* New process table fields */
+	prptr->pruserstack = saddr;
+	prptr->prsyscallkstack = prkstack;
 
 	/* Initialize stack as if the process was called		*/
 

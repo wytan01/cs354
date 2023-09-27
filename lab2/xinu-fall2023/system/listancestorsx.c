@@ -2,7 +2,7 @@
 
 #include <xinu.h>
 
-extern char *pruserstack;
+extern char *prustack;
 extern char *prkstack;
 
 /*------------------------------------------------------------------------
@@ -17,7 +17,6 @@ syscall listancestorsx(pid32 pid) {
     int syscall = 6; 
 
     struct  procent *prptr = &proctab[getpid()];; /* Pointer to proc. table entry */
-    //pruserstack = prptr->prstkbase; /* Get the top of user stack */
     prkstack = prptr->prsyscallkstack; /* Get the top of kernel stack */
 
 
@@ -35,5 +34,8 @@ syscall listancestorsx(pid32 pid) {
     /* : Input Operand - syscall number and pid*/
     /* : Adding EBX and ECX into clobber list */
         /* Using the clobber list obviates the need to save/restore register values used by the system call dispatcher. */
+
+    prptr->pruserstack = prustack; /* Transferred to global var by ESP */
+    
     return numancestors;
 }

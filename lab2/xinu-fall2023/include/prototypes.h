@@ -122,6 +122,9 @@ extern	syscall	getpidx(void);
 /* in file getprio.c */
 extern	syscall	getprio(pid32);
 
+/* in file getpriox.c */
+extern	syscall	getpriox(pid32);
+
 /* in file getstk.c */
 extern	char	*getstk(uint32);
 
