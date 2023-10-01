@@ -28,6 +28,8 @@ pid32	currpid;		/* ID of currently executing process	*/
 
 /* Control sequence to reset the console colors and cusor positiion	*/
 
+uint32	cputime = 0;	/* Estimate how many msec the current process spent in PR_CURR after being context-switched in */
+
 #define	CONSOLE_RESET	" \033[0m\033[2J\033[;H"
 
 /*------------------------------------------------------------------------

@@ -3,6 +3,7 @@
 #include <xinu.h>
 
 struct	defer	Defer;
+extern	uint32	cputime;
 
 /*------------------------------------------------------------------------
  *  resched  -  Reschedule processor to highest priority eligible process
@@ -41,6 +42,15 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 	ptnew = &proctab[currpid];
 	ptnew->prstate = PR_CURR;
 	preempt = QUANTUM;		/* Reset time slice for process	*/
+
+	/* Update the old process' prtotcpu */
+	if (cputime == 0) {
+		cputime = 1;	/* Round up if it's less than 1 msec */
+	}
+
+	ptold->prtotcpu += cputime; /* Update the old process' prtotcpu */
+	cputime = 0;	/* Reset to 0 for the new process */
+
 	ctxsw(&ptold->prstkptr, &ptnew->prstkptr);
 
 	/* Old process returns here when resumed */
