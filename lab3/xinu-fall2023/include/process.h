@@ -53,6 +53,9 @@ struct procent {		/* Entry in the process table		*/
 	bool8	prhasmsg;	/* Nonzero iff msg is valid		*/
 	int16	prdesc[NDESC];	/* Device descriptors for process	*/
 	uint32	prtotcpu;	/* Record this process's CPU usage in msec */
+	uint32	prtotready; /* Counts # of times it changes to PR_READY */
+	uint32	prtotresp;	/* Sums total time waiting in readylist */
+	uint32	prreadystart; /* Records current time since bootloading a backend machine when the process enters the XINU's readylist */
 };
 
 /* Marker for the top of a process stack (used to help detect overflow)	*/

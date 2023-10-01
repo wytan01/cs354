@@ -50,6 +50,9 @@ pid32	create(
 	prptr->prparent = (pid32)getpid();
 	prptr->prhasmsg = FALSE;
 	prptr->prtotcpu = 0;	/* Initialize total cpu time as 0 */
+	prptr->prtotready = 0; 
+	prptr->prtotresp = 0;	
+	prptr->prreadystart = 0;
 
 	/* Set up stdin, stdout, and stderr descriptors for the shell	*/
 	prptr->prdesc[0] = CONSOLE;

@@ -8,6 +8,7 @@
 		.text
 		.globl	clkdisp		# Clock interrupt dispatcher
 		.extern	cputime		# Global var from initialize.c
+		.extern clkcountermsec # global variable from clkinit.c
 clkdisp:
 		pushal			# Save registers
 		cli			# Disable further interrupts
@@ -16,9 +17,13 @@ clkdisp:
 
 		call	clkhandler	# Call high level handler
 
-		mov		cputime, %eax 	# move var into eax register
-		add 	$1, %eax		# add 1 to the content of eax
-		mov		%eax, cputime 	# move the content of eax back to var
+		movl	cputime, %eax 	# move var into eax register
+		addl 	$1, %eax		# add 1 to the content of eax
+		movl	%eax, cputime 	# move the content of eax back to var
+
+		movl	clkcountermsec, %eax 	# move var into eax register
+		addl 	$1, %eax				# add 1 to the content of eax
+		movl	%eax, clkcountermsec 	# move the content of eax back to var
 
 		sti			# Restore interrupt status
 		popal			# Restore registers

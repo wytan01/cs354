@@ -3,6 +3,7 @@
 #include <xinu.h>
 
 qid16	readylist;			/* Index of ready list		*/
+extern	uint32	clkcountermsec;
 
 /*------------------------------------------------------------------------
  *  ready  -  Make a process eligible for CPU service
@@ -22,6 +23,9 @@ status	ready(
 
 	prptr = &proctab[pid];
 	prptr->prstate = PR_READY;
+	prptr->prtotready++; /* Increment since it changed to PR_READY */
+	prptr->prreadystart = clkcountermsec; /* Record time it became ready */
+
 	insert(pid, readylist, prptr->prprio);
 	resched();
 

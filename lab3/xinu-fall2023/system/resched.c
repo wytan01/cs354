@@ -4,6 +4,7 @@
 
 struct	defer	Defer;
 extern	uint32	cputime;
+extern	uint32	clkcountermsec;
 
 /*------------------------------------------------------------------------
  *  resched  -  Reschedule processor to highest priority eligible process
@@ -33,6 +34,8 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 		/* Old process will no longer remain current */
 
 		ptold->prstate = PR_READY;
+		ptold->prtotready++; /* Increment since it changed to PR_READY */
+		ptold->prreadystart = clkcountermsec; /* Record time it became ready */
 		insert(currpid, readylist, ptold->prprio);
 	}
 
@@ -42,6 +45,14 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 	ptnew = &proctab[currpid];
 	ptnew->prstate = PR_CURR;
 	preempt = QUANTUM;		/* Reset time slice for process	*/
+
+	/* Update prtotresp using clkcountermsec and prreadystart */
+	uint32 diff = clkcountermsec - ptnew->prreadystart;
+
+	if (diff == 0) {
+		diff = 1;
+	}
+	ptnew->prtotresp += diff;
 
 	/* Update the old process' prtotcpu */
 	if (cputime == 0) {

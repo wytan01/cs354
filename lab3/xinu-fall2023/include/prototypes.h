@@ -12,6 +12,9 @@ extern	void	arp_hton(struct arppacket *);
 /* in file ascdate.c */
 extern	status	ascdate(uint32, char *);
 
+/* in file avgresponse.c */
+extern	syscall	avgresponse(pid32);
+
 /* in file bufinit.c */
 extern	status	bufinit(void);
 
