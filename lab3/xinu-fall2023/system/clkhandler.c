@@ -40,9 +40,10 @@ void	clkhandler()
 
 	if((--preempt) <= 0) {
 		proctab[currpid].prprio = 1;	/* Update prprio for CPU-bound */
+		preempt = QUANTUMCPU;	/* Set preempt to time slice for CPU-bound processes*/
+
 		// preempt = QUANTUM;
 
-		preempt = QUANTUMCPU;	/* Set preempt to time slice for CPU-bound processes*/
 		resched();
 	}
 }

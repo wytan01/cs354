@@ -9,6 +9,7 @@ syscall	avgresponse(pid32 pid) {
     }
 
     struct procent	*prptr = &proctab[pid];
+    kprintf("prtotresp: %d, prtotready: %d\n", prptr->prtotresp, prptr->prtotready);
     syscall avg_response = (prptr->prtotresp + prptr->prtotready - 1) / prptr->prtotready; /* To round up the integer division */
 
     return avg_response;
