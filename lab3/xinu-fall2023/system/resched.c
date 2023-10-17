@@ -4,7 +4,6 @@
 
 struct	defer	Defer;
 extern	uint32	cputime;
-extern	uint32	clkcountermsec;
 
 /*------------------------------------------------------------------------
  *  resched  -  Reschedule processor to highest priority eligible process

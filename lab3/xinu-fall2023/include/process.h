@@ -41,6 +41,7 @@
 #define QUANTUMIO 5		/* Time slice for I/O-bound processes */
 #define QUANTUMCPU 50	/* Time slice for CPU-bound processes */
 #define QUANTUMIDLE 100	/* Time slice for idle processes */
+#define	STOPCOND	10000 /* Threshold condition for benchmark apps */
 
 /* Definition of the process table (multiple of 32 bits) */
 

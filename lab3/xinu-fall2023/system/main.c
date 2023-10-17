@@ -2,8 +2,6 @@
 
 #include <xinu.h>
 
-extern uint32 clkcountermsec;
-
 void    donothing(void) {
     int i = 0; 
 	for( i = 0; i < 10; i++ ) {
@@ -14,11 +12,12 @@ void    donothing(void) {
 process	main(void)
 {
     /* Test for 3.1 */
-    pid32 p1 = create(donothing, 1024, 20, "proc1", 0, NULL);
-    resume(p1);
+    // pid32 p1 = create(donothing, 1024, 20, "proc1", 0, NULL);
+    // resume(p1);
 
-    pid32 p2 = create(donothing, 1024, 30, "proc2", 0, NULL);
-    resume(p2);
+    // pid32 p2 = create(donothing, 1024, 30, "proc2", 0, NULL);
+    // resume(p2);
+    
 
     // pid32 p3 = create(foo, 1024, 20, "proc3", 0, NULL);
 

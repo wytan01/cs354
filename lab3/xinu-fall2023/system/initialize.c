@@ -31,6 +31,7 @@ pid32	currpid;		/* ID of currently executing process	*/
 uint32	cputime = 0;	/* Estimate how many msec the current process spent in PR_CURR after being context-switched in */
 
 #define	CONSOLE_RESET	" \033[0m\033[2J\033[;H"
+#define	STOPCOND	10000 /* Threshold condition for benchmark apps */
 
 /*------------------------------------------------------------------------
  * nulluser - initialize the system and become the null process
@@ -86,6 +87,7 @@ void	nulluser()
 	//net_init();
 
 	proctab[currpid].prprio = 0; /* Update prprio for null process */
+	int printed = 0;
 
 	/* Create a process to finish startup and start main */
 
@@ -97,7 +99,10 @@ void	nulluser()
 	/* Become the Null process (i.e., guarantee that the CPU has	*/
 	/*  something to run when no other process is ready to execute)	*/
 	while (TRUE) {
-		;		/* Do nothing */
+		if (printed == 0 && clkcountermsec > STOPCOND) {
+			kprintf("PID: %d, idle process, CPU usage: %d, Response time: %d, clkcountermsec: %d\n", currpid, totcpu(currpid), avgresponse(currpid), clkcountermsec);
+			printed = 1;
+		}
 	}
 
 }

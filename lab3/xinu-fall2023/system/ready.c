@@ -3,7 +3,6 @@
 #include <xinu.h>
 
 qid16	readylist;			/* Index of ready list		*/
-extern	uint32	clkcountermsec;
 
 /*------------------------------------------------------------------------
  *  ready  -  Make a process eligible for CPU service
