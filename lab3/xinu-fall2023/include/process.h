@@ -38,6 +38,10 @@
 
 #define NDESC		5	/* must be odd to make procent 4N bytes	*/
 
+#define QUANTUMIO 5		/* Time slice for I/O-bound processes */
+#define QUANTUMCPU 50	/* Time slice for CPU-bound processes */
+#define QUANTUMIDLE 100	/* Time slice for idle processes */
+
 /* Definition of the process table (multiple of 32 bits) */
 
 struct procent {		/* Entry in the process table		*/
