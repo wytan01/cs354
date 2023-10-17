@@ -85,6 +85,8 @@ void	nulluser()
 
 	//net_init();
 
+	proctab[currpid].prprio = 0; /* Update prprio for null process */
+
 	/* Create a process to finish startup and start main */
 
 	resume(create((void *)startup, INITSTK, INITPRIO,

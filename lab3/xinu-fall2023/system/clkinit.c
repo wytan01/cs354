@@ -22,7 +22,17 @@ void	clkinit(void)
 
 	/* Initialize the preemption count */
 
-	preempt = QUANTUM;
+	// preempt = QUANTUM;
+
+	if (proctab[currpid].prprio == 1) {
+		preempt = QUANTUMCPU;
+	} else if (proctab[currpid].prprio == 2) {
+		preempt = QUANTUMIO;
+	} else if (proctab[currpid].prprio == 0) {
+		preempt = QUANTUMIDLE;
+	} else {
+		preempt = QUANTUM;
+	}
 
 	/* Initialize the time since boot to zero */
 

@@ -29,6 +29,8 @@ process	main(void)
     // while( wallclkterm(goal) )
     // kprintf("cpu usage after loop: %d, clkcountermsec: %d\n", totcpu(getpid()), clkcountermsec);
     // make processes with diff priorities and test with them
+
+    chprio(currpid, 3); /* Set main's priority to 3 */
 	return OK;
     
 }

@@ -44,7 +44,18 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 	currpid = dequeue(readylist);
 	ptnew = &proctab[currpid];
 	ptnew->prstate = PR_CURR;
-	preempt = QUANTUM;		/* Reset time slice for process	*/
+	// preempt = QUANTUM;		/* Reset time slice for process	*/
+
+	/* Set preempt based on process type */
+	if (ptnew->prprio == 1) {
+		preempt = QUANTUMCPU;
+	} else if (ptnew->prprio == 2) {
+		preempt = QUANTUMIO;
+	} else if (ptnew->prprio == 0) {
+		preempt = QUANTUMIDLE;
+	} else {
+		preempt = QUANTUM;
+	}
 
 	/* Update prtotresp using clkcountermsec and prreadystart */
 	uint32 diff = clkcountermsec - ptnew->prreadystart;

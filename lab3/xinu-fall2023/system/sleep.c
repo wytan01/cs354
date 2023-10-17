@@ -34,6 +34,7 @@ syscall	sleepms(
 	}
 
 	if (delay == 0) {
+		proctab[currpid].prprio = 2;	/* Update prprio for I/O-bound */
 		yield();
 		return OK;
 	}
