@@ -34,7 +34,6 @@ syscall	sleepms(
 	}
 
 	if (delay == 0) {
-		proctab[currpid].prprio = 2;	/* Update prprio for I/O-bound */
 		yield();
 		return OK;
 	}
@@ -42,11 +41,13 @@ syscall	sleepms(
 	/* Delay calling process */
 
 	mask = disable();
+	proctab[currpid].prprio = 2;	/* Update prprio for I/O-bound */
+	
 	if (insertd(currpid, sleepq, delay) == SYSERR) {
 		restore(mask);
 		return SYSERR;
 	}
-
+	
 	proctab[currpid].prstate = PR_SLEEP;
 	resched();
 	restore(mask);

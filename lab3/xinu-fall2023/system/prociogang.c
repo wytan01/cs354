@@ -1,12 +1,12 @@
-/* procio.c - procio */
+/* prociogang.c - prociogang */
 
 #include <xinu.h>
 
 /*------------------------------------------------------------------------
- *  procio  - I/O-bound app
+ *  prociogang  - I/O-bound app that starves CPU-bound
  *------------------------------------------------------------------------
  */
-void    procio(void) {
+void    prociogang(void) {
     /* Check if it exceeds the threshold */
     while (clkcountermsec <= STOPCOND) {
         int i;
@@ -15,11 +15,11 @@ void    procio(void) {
         for (i = 0; i < 5000; i++) {
             a += 2;
         } 
-        sleepms(50);    /* Block for 50 ms*/
+        sleepms(3);
     } 
     intmask	mask = disable();
-
     kprintf("PID: %d, I/O-bound process, CPU usage: %d, Response time: %d, clkcountermsec: %d\n", currpid, totcpu(currpid), avgresponse(currpid), clkcountermsec);
-    
     restore(mask);
+    
+    kill(currpid);  /* Terminate the process*/
 }

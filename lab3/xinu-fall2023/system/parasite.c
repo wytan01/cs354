@@ -1,25 +1,25 @@
-/* procio.c - procio */
+/* parasite.c - parasite */
 
 #include <xinu.h>
 
 /*------------------------------------------------------------------------
- *  procio  - I/O-bound app
+ *  parasite  - Appears to kernel as I/O-bound but has CPU-bound behavior
  *------------------------------------------------------------------------
  */
-void    procio(void) {
+void    parasite(void) {
     /* Check if it exceeds the threshold */
     while (clkcountermsec <= STOPCOND) {
         int i;
         int a = 5;
         /* Consumes 3 msec */
-        for (i = 0; i < 5000; i++) {
+        for (i = 0; i < 40000; i++) {
             a += 2;
         } 
-        sleepms(50);    /* Block for 50 ms*/
+        sleepms(0);    /* Kernel interprets as being I/O-bound */
     } 
     intmask	mask = disable();
-
     kprintf("PID: %d, I/O-bound process, CPU usage: %d, Response time: %d, clkcountermsec: %d\n", currpid, totcpu(currpid), avgresponse(currpid), clkcountermsec);
-    
     restore(mask);
+    
+    kill(currpid);  /* Terminate the process*/
 }

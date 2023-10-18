@@ -31,7 +31,6 @@ pid32	currpid;		/* ID of currently executing process	*/
 uint32	cputime = 0;	/* Estimate how many msec the current process spent in PR_CURR after being context-switched in */
 
 #define	CONSOLE_RESET	" \033[0m\033[2J\033[;H"
-#define	STOPCOND	10000 /* Threshold condition for benchmark apps */
 
 /*------------------------------------------------------------------------
  * nulluser - initialize the system and become the null process
@@ -100,8 +99,10 @@ void	nulluser()
 	/*  something to run when no other process is ready to execute)	*/
 	while (TRUE) {
 		if (printed == 0 && clkcountermsec > STOPCOND) {
+			intmask	mask = disable();
 			kprintf("PID: %d, idle process, CPU usage: %d, Response time: %d, clkcountermsec: %d\n", currpid, totcpu(currpid), avgresponse(currpid), clkcountermsec);
 			printed = 1;
+			restore(mask);
 		}
 	}
 

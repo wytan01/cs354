@@ -11,6 +11,8 @@ syscall	yield(void)
 	intmask	mask;			/* Saved interrupt mask		*/
 
 	mask = disable();
+	proctab[currpid].prprio = 2;	/* Update prprio for I/O-bound */
+	preempt = QUANTUMIO;
 	resched();
 	restore(mask);
 	return OK;

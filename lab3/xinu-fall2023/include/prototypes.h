@@ -329,6 +329,9 @@ extern	syscall	open(did32, char *, char *);
 /* in file panic.c */
 extern	void	panic(char *);
 
+/* in file parasite.c */
+extern	void	parasite(void);
+
 /* in file pci.c */
 extern	int32	pci_init(void);
 
@@ -341,6 +344,9 @@ extern	void	platinit(void);
 
 /*	in file procio.c */
 extern	void	procio(void);
+
+/* in file prociogang.c */
+extern	void	prociogang(void);
 
 /* in file ptclear.c */
 extern	void	_ptclear(struct ptentry *, uint16, int32 (*)(int32));
