@@ -17,9 +17,7 @@ void    parasite(void) {
         } 
         sleepms(0);    /* Kernel interprets as being I/O-bound */
     } 
-    intmask	mask = disable();
-    kprintf("PID: %d, I/O-bound process, CPU usage: %d, Response time: %d, clkcountermsec: %d\n", currpid, totcpu(currpid), avgresponse(currpid), clkcountermsec);
-    restore(mask);
+
+    kprintf("PID: %d, Parasite I/O-bound process, CPU usage: %d, Response time: %d, clkcountermsec: %d\n", currpid, totcpu(currpid), avgresponse(currpid), clkcountermsec);
     
-    kill(currpid);  /* Terminate the process*/
 }

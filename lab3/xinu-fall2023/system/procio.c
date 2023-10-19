@@ -17,9 +17,5 @@ void    procio(void) {
         } 
         sleepms(50);    /* Block for 50 ms*/
     } 
-    intmask	mask = disable();
-
     kprintf("PID: %d, I/O-bound process, CPU usage: %d, Response time: %d, clkcountermsec: %d\n", currpid, totcpu(currpid), avgresponse(currpid), clkcountermsec);
-    
-    restore(mask);
 }

@@ -113,16 +113,14 @@ process	main(void)
     // resume(ps);
 
     /* Bonus */
-    // pid32 io1 = create(prociogang, 1024, 2, "cpu 1", 0, NULL);
-    // pid32 io2 = create(prociogang, 1024, 2, "cpu 2", 0, NULL);
-    // pid32 io3 = create(prociogang, 1024, 2, "cpu 3", 0, NULL);
-    // pid32 cpu = create(cpuproc, 1024, 1, "ps 1", 0, NULL);
-    // resume(io1);
-    // resume(io2);
-    // resume(io3);
-    // resume(cpu);
-
-    
+    pid32 io1 = create(prociogang, 1024, 2, "io 1", 0, NULL);
+    pid32 io2 = create(prociogang, 1024, 2, "io 2", 0, NULL);
+    pid32 io3 = create(prociogang, 1024, 2, "io 3", 0, NULL);
+    pid32 cpu = create(cpuproc, 1024, 1, "cpu 1", 0, NULL);
+    resume(io1);
+    resume(io2);
+    resume(io3);
+    resume(cpu);
 
 	return OK;
     

@@ -99,10 +99,8 @@ void	nulluser()
 	/*  something to run when no other process is ready to execute)	*/
 	while (TRUE) {
 		if (printed == 0 && clkcountermsec > STOPCOND) {
-			intmask	mask = disable();
 			kprintf("PID: %d, idle process, CPU usage: %d, Response time: %d, clkcountermsec: %d\n", currpid, totcpu(currpid), avgresponse(currpid), clkcountermsec);
 			printed = 1;
-			restore(mask);
 		}
 	}
 
