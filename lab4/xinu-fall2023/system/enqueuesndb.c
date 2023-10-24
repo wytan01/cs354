@@ -3,7 +3,7 @@
 #include <xinu.h>
 
 /*------------------------------------------------------------------------
- *  enqueuesndb  -  Pass a message to a process and start recipient if waiting
+ *  enqueuesndb  -  Inserts a 1-word message pmessage from sender psender into the FIFO queue of receiver preceiver
  *------------------------------------------------------------------------
  */
 
@@ -17,7 +17,7 @@ enqueuesndb(pid32 preceiver, pid32 psender, umsg32 pmessage) {
     struct	procent *receiver_ptr = &proctab[preceiver];
 
     /* Allocate memory for the new blockedsender structure */
-    uint32 size = sizeof(struct rdbuff);
+    uint32 size = sizeof(struct blockedsenders);
     struct blockedsenders *newbs = (struct blockedsenders *)getmem(size);
 
     if (newbs == NULL) { // getmem failed
