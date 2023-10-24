@@ -7,7 +7,7 @@
  *------------------------------------------------------------------------
  */
 
-dequeuesndb(pid32 preceiver, struct blockedsenders *dummystore) {
+void dequeuesndb(pid32 preceiver, struct blockedsenders *dummystore) {
     /* Get sender at front of queue */
     struct blockedsenders *head = proctab[preceiver].prsendbqueue1;
 
@@ -19,5 +19,5 @@ dequeuesndb(pid32 preceiver, struct blockedsenders *dummystore) {
     proctab[preceiver].prsendbqueue1 = head->next;
 
     /* Free the linked list element */
-    freemem(head, sizeof(struct blockedsenders));
+    freemem((char*) head, sizeof(struct blockedsenders));
 }

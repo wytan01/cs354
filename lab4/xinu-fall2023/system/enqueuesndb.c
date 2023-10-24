@@ -7,14 +7,11 @@
  *------------------------------------------------------------------------
  */
 
-enqueuesndb(pid32 preceiver, pid32 psender, umsg32 pmessage) {
+int32 enqueuesndb(pid32 preceiver, pid32 psender, umsg32 pmessage) {
     /* Check if pid is valid for sender & receiver */
     if ( isbadpid(preceiver) || isbadpid(psender) ) {
         return SYSERR; // -1 since it fails
     }
-
-    /* Setup pointers */
-    struct	procent *receiver_ptr = &proctab[preceiver];
 
     /* Allocate memory for the new blockedsender structure */
     uint32 size = sizeof(struct blockedsenders);
@@ -28,6 +25,9 @@ enqueuesndb(pid32 preceiver, pid32 psender, umsg32 pmessage) {
     newbs->senderpid = psender;
     newbs->sendermsg = pmessage;
     newbs->next = NULL;
+
+    /* Setup pointer */
+    struct	procent *receiver_ptr = &proctab[preceiver];
 
     /* Check if there's a FIFO queue */
     if (receiver_ptr->prsendbqueue1 == NULL) {

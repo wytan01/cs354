@@ -2,30 +2,51 @@
 
 #include <xinu.h>
 
+void sender(umsg32 msg) {
+	kprintf("%d ms: Send '%s' from pid %d.... ", clkcountermsec, msg, currpid);
+	if (send(4, msg) == OK) {
+		kprintf("Sent!\n");
+	} else {
+		kprintf("Failed to send :( \n");
+	}
+	kprintf("---------------------------\n");
+}
+
+void senderb(umsg32 msg) {
+	kprintf("%d ms: Sendb '%s' from pid %d.... ", clkcountermsec, msg, currpid);
+	if (sendb(4, msg) == OK) {
+		kprintf("Sent!\n");
+	} else {
+		kprintf("Failed to send :( \n");
+	}
+	kprintf("---------------------------\n");
+	sleepms(40); // to keep the process running
+}
+
+void receiver(void) {
+	while(1) {
+		sleepms(5);
+		if (proctab[currpid].prhasmsg == TRUE) {
+			intmask mask = disable();
+			kprintf("%d ms: Receive '%s' at pid %d\n", clkcountermsec, receive(), currpid);
+			kprintf("---------------------------\n");
+			restore(mask);
+		}
+	}
+}
+
 process	main(void)
 {
+	/* Testing for 3: Blocking message send */
+	resume(create(receiver, 1024, INITPRIO, "receiver", 0, NULL));
+	resume(create(sender, 1024, 25, "sender1", 1, "hi"));
+	resume(create(sender, 1024, 25, "sender2", 1, "hello"));
+	resume(create(sender, 1024, 25, "sender3", 1, "hey"));
+	sleepms(10);
+	resume(create(senderb, 1024, 25, "senderb1", 1, "pls"));
+	resume(create(senderb, 1024, 25, "senderb2", 1, "bye"));
+	resume(create(senderb, 1024, 25, "senderb3", 1, "ok"));
     
-    	kprintf("\nHello World!\n");
-    	kprintf("\nI'm the first XINU app and running function main() in system/main.c.\n");
-    	kprintf("\nI was created by nulluser() in system/initialize.c using create().\n");
-    	kprintf("\nMy creator will turn itself into the do-nothing null process.\n");
-    	kprintf("\nI will create a second XINU app that runs shell() in shell/shell.c as an example.\n");
-    	kprintf("\nYou can do something else, or do nothing; it's completely up to you.\n");
-    	kprintf("\n...creating a shell\n");
-
-	/* Run the Xinu shell */
-
-	recvclr();
-	resume(create(shell, 8192, 50, "shell", 1, CONSOLE));
-
-	/* Wait for shell to exit and recreate it */
-
-	while (TRUE) {
-		receive();
-		sleepms(200);
-		kprintf("\n\nMain process recreating shell\n\n");
-		resume(create(shell, 4096, 20, "shell", 1, CONSOLE));
-	}
+    
 	return OK;
-    
 }
