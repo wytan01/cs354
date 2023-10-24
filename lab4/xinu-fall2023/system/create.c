@@ -55,6 +55,10 @@ pid32	create(
 	prptr->prdesc[1] = CONSOLE;
 	prptr->prdesc[2] = CONSOLE;
 
+	/* Initialize both pointers to null since there's no queue yet */
+	prptr->prsendbqueue1 = NULL;
+	prptr->prsendbqueue2 = NULL;
+
 	/* Initialize stack as if the process was called		*/
 
 	*saddr = STACKMAGIC;

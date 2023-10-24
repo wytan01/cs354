@@ -1,3 +1,17 @@
+/* LAB ADDED FILES */
+
+/* in file sendb.c */
+extern	syscall	sendb(pid32, umsg32);
+
+/* in file enqueuesndb.c */
+extern	int32	enqueuesndb(pid32 preceiver, pid32 psender, umsg32 pmessage);
+
+/* in file dequeuesndb.c */
+extern	void 	dequeuesndb(pid32 preceiver, struct blockedsenders *dummystore);
+
+
+/* END OF LAB ADDED FILES */
+
 /* in file addargs.c */
 extern	status	addargs(pid32, int32, int32[], int32,char *, void *);
 

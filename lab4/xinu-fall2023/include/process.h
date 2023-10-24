@@ -16,6 +16,7 @@
 #define	PR_SUSP		5	/* Process is suspended			*/
 #define	PR_WAIT		6	/* Process is on semaphore queue	*/
 #define	PR_RECTIM	7	/* Process is receiving with timeout	*/
+#define PR_SNDB		14	/* Process is blocked trying to send a message */
 
 /* Miscellaneous process definitions */
 
@@ -52,6 +53,15 @@ struct procent {		/* Entry in the process table		*/
 	umsg32	prmsg;		/* Message sent to this process		*/
 	bool8	prhasmsg;	/* Nonzero iff msg is valid		*/
 	int16	prdesc[NDESC];	/* Device descriptors for process	*/
+	struct 	blockedsenders	*prsendbqueue1;	/* Head pointer of a FIFO queue of blocked senders for the same receiver */
+	struct 	blockedsenders	*prsendbqueue2; /* Tail pointer of a FIFO queue of blocked senders */
+};
+
+/* Definition of the blockedsender struct */
+struct blockedsenders {
+  pid32 senderpid;		// PID of blocked sender
+  umsg32 sendermsg;		// message of the sender
+  struct blockedsenders *next;	// next element pointer
 };
 
 /* Marker for the top of a process stack (used to help detect overflow)	*/
