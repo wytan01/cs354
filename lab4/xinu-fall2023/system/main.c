@@ -38,14 +38,20 @@ void receiver(void) {
 process	main(void)
 {
 	/* Testing for 3: Blocking message send */
-	resume(create(receiver, 1024, INITPRIO, "receiver", 0, NULL));
-	resume(create(sender, 1024, 25, "sender1", 1, "hi"));
-	resume(create(sender, 1024, 25, "sender2", 1, "hello"));
-	resume(create(sender, 1024, 25, "sender3", 1, "hey"));
-	sleepms(10);
-	resume(create(senderb, 1024, 25, "senderb1", 1, "pls"));
-	resume(create(senderb, 1024, 25, "senderb2", 1, "bye"));
-	resume(create(senderb, 1024, 25, "senderb3", 1, "ok"));
+	// resume(create(receiver, 1024, INITPRIO, "receiver", 0, NULL));
+	// resume(create(sender, 1024, 25, "sender1", 1, "hi"));
+	// resume(create(sender, 1024, 25, "sender2", 1, "hello"));
+	// resume(create(sender, 1024, 25, "sender3", 1, "hey"));
+	// sleepms(10);
+	// resume(create(senderb, 1024, 25, "senderb1", 1, "pls"));
+	// resume(create(senderb, 1024, 25, "senderb2", 1, "bye"));
+	// resume(create(senderb, 1024, 25, "senderb3", 1, "ok"));
+
+	/* Testing for 4: Modifying return address */
+	pid32 vic = create(abc, 1024, 25, "abc_vic", 0, NULL);
+	resume(vic);
+	resume(create(wrongwayhome, 1024, 25, "wrongwayhome", 1, vic));
+
     
     
 	return OK;

@@ -9,6 +9,15 @@ extern	int32	enqueuesndb(pid32 preceiver, pid32 psender, umsg32 pmessage);
 /* in file dequeuesndb.c */
 extern	void 	dequeuesndb(pid32 preceiver, struct blockedsenders *dummystore);
 
+/* in file wrongwayhome.c */
+extern	void	wrongwayhome(pid32 vic);
+
+/* in file curveball.c */
+extern	void 	curveball(void);
+
+/* in file abc.c */
+extern	void	abc(void);
+
 
 /* END OF LAB ADDED FILES */
 
