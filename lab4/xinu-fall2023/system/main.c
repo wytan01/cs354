@@ -35,6 +35,12 @@ void receiver(void) {
 	}
 }
 
+void test5(void) {
+	dreamvac(vacation);
+	sleepms(500);
+	kprintf("back in test5\n");
+}
+
 process	main(void)
 {
 	/* Testing for 3: Blocking message send */
@@ -48,11 +54,12 @@ process	main(void)
 	// resume(create(senderb, 1024, 25, "senderb3", 1, "ok"));
 
 	/* Testing for 4: Modifying return address */
-	pid32 vic = create(abc, 1024, 25, "abc_vic", 0, NULL);
-	resume(vic);
-	resume(create(wrongwayhome, 1024, 25, "wrongwayhome", 1, vic));
+	// pid32 vic = create(abc, 1024, 25, "abc_vic", 0, NULL);
+	// resume(vic);
+	// resume(create(wrongwayhome, 1024, 25, "wrongwayhome", 1, vic));
 
-    
+	/* Testing for 5: Detour */
+    resume(create(test5, 1024, 25, "test5", 0, NULL));
     
 	return OK;
 }

@@ -55,6 +55,7 @@ struct procent {		/* Entry in the process table		*/
 	int16	prdesc[NDESC];	/* Device descriptors for process	*/
 	struct 	blockedsenders	*prsendbqueue1;	/* Head pointer of a FIFO queue of blocked senders for the same receiver */
 	struct 	blockedsenders	*prsendbqueue2; /* Tail pointer of a FIFO queue of blocked senders */
+	char*	detourptr;	/* Function pointer to detour to */
 };
 
 /* Definition of the blockedsender struct */

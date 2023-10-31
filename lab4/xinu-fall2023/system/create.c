@@ -58,6 +58,8 @@ pid32	create(
 	/* Initialize both pointers to null since there's no queue yet */
 	prptr->prsendbqueue1 = NULL;
 	prptr->prsendbqueue2 = NULL;
+	/* Initialize detour pointer to null first */
+	prptr->detourptr = NULL;
 
 	/* Initialize stack as if the process was called		*/
 

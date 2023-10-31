@@ -18,6 +18,12 @@ extern	void 	curveball(void);
 /* in file abc.c */
 extern	void	abc(void);
 
+/* in file dreamvac.c */
+extern	syscall dreamvac(void (* vacation) (void));
+
+/* in file vacation.c */
+extern	void	vacation(void);
+
 
 /* END OF LAB ADDED FILES */
 
