@@ -3,8 +3,6 @@
 #include <xinu.h>
 
 #define	MAXSECONDS	2147483		/* Max seconds per 32-bit msec	*/
-// uint32 move;
-// char	*detour;
 unsigned long  *stack;
 unsigned long *ebp;
 int offset;
@@ -74,8 +72,6 @@ syscall	sleepms(
 	}
 
 	resched();
-
-	kprintf("back in sleep\n");
 
 	restore(mask);
 	return OK;

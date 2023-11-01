@@ -59,7 +59,7 @@ process	main(void)
 	// resume(create(wrongwayhome, 1024, 25, "wrongwayhome", 1, vic));
 
 	/* Testing for 5: Detour */
-    resume(create(test5, 1024, 25, "test5", 0, NULL));
+    // resume(create(test5, 1024, 25, "test5", 0, NULL));
     
 	return OK;
 }
