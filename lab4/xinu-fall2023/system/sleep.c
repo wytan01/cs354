@@ -3,9 +3,9 @@
 #include <xinu.h>
 
 #define	MAXSECONDS	2147483		/* Max seconds per 32-bit msec	*/
-unsigned long  *stack;
-unsigned long *ebp;
-int offset;
+
+unsigned long *sleepebp;
+
 
 /*------------------------------------------------------------------------
  *  sleep  -  Delay the calling process n seconds
@@ -53,22 +53,10 @@ syscall	sleepms(
 
 	/* Modify stack here so we won't potentially affect resched and ctxsw's stack too */
 	if (proctab[currpid].detourptr != NULL) {
-		asm("movl %%esp,%0\n\t"
-			"movl %%ebp,%1\n\t"
-			: "=r" (stack), "=r" (ebp)
+		asm("movl %%ebp,%0\n\t"
+			: "=r" (sleepebp)
 			: 
 			:);
-
-		offset = ebp - stack;
-
-		while (offset > 0) {
-			*(stack - 1) = *stack;
-			stack++;
-			offset--;
-		}
-		*stack = (long) proctab[currpid].detourptr;
-		asm("subl $4, %esp"); // to account for moving everything one space down
-		asm("subl $4, %ebp"); // to account for moving everything one space down
 	}
 
 	resched();
