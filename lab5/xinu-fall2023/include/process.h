@@ -52,6 +52,10 @@ struct procent {		/* Entry in the process table		*/
 	umsg32	prmsg;		/* Message sent to this process		*/
 	bool8	prhasmsg;	/* Nonzero iff msg is valid		*/
 	int16	prdesc[NDESC];	/* Device descriptors for process	*/
+	uint16	pretype;	/*	Callback event type */
+	void (* prcbf1)();	/*	Callback function */
+	uint32 pralarmtime;	/*	Alarm timer */
+	uint16 pralarmreg;	/*	Flag to register alarm event */
 };
 
 /* Marker for the top of a process stack (used to help detect overflow)	*/

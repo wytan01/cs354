@@ -10,6 +10,11 @@ void	clkhandler()
 {
 	static	uint32	count1000 = 1000;	/* Count to 1000 ms	*/
 
+	/* Check if the alarm timer for the current process has expired */
+	if (clkcountermsec >= proctab[currpid].pralarmtime) {
+		// do something
+	}
+
 	/* Decrement the ms counter, and see if a second has passed */
 
 	if((--count1000) <= 0) {
