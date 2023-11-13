@@ -51,6 +51,7 @@ pid32	create(
 	prptr->prhasmsg = FALSE;
 	prptr->pretype = 0;	/* Initialize to 0 */
 	prptr->pralarmreg = 0; /* Initialize to 0 */
+	prptr->prmsgreg = 0; /* Initialize to 0 */
 
 	/* Set up stdin, stdout, and stderr descriptors for the shell	*/
 	prptr->prdesc[0] = CONSOLE;

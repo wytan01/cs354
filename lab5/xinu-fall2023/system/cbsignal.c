@@ -23,6 +23,22 @@ syscall	cbsignal(uint16 etype, void (* cbf) (void), uint32 val) {
         proctab[currpid].pralarmtime = clkcountermsec + val; // set alarm timer
 
     } else if (etype == 2) { // asynchronous message receive event
+        /* Check that cbf does not fall outside the text segment */
+        if ((uint32) cbf < (uint32) &text || (uint32) cbf > (uint32) &etext) {
+            return SYSERR;
+        }
+
+        /* Check that we have only one outstanding message event */
+        if (proctab[currpid].prmsgreg != 0) {
+            return SYSERR;
+        }
+
+        proctab[currpid].prmsgreg = 1;
+        if (proctab[currpid].pralarmreg == 0) {
+            proctab[currpid].pretype = 2;
+        } else if (proctab[currpid].pralarmreg == 1) {
+            proctab[currpid].pretype = 3;
+        }
 
     } else {
         return SYSERR;
