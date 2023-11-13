@@ -4,7 +4,10 @@ extern	void	helloworld(void);
 /* in file cbsignal.c */
 extern	syscall	cbsignal(uint16 etype, void (* cbf) (void), uint32 val);
 
+extern	void	cbfmanager(void);
+
 /* End of lab added files */
+
 /* in file addargs.c */
 extern	status	addargs(pid32, int32, int32[], int32,char *, void *);
 
