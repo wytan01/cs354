@@ -58,6 +58,7 @@ struct procent {		/* Entry in the process table		*/
 	uint16 pralarmreg;	/*	Flag to register alarm event */
 	void (* prcbf2)();	/*	Callback function for message event */
 	uint16 prmsgreg;	/* 	Flag to register message event */
+	unsigned long *prsleepebp;	/* Stores the ebp when at sleepms for asynchronous message receive event */
 };
 
 /* Marker for the top of a process stack (used to help detect overflow)	*/

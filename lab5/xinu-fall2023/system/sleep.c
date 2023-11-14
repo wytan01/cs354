@@ -47,6 +47,15 @@ syscall	sleepms(
 	}
 
 	proctab[currpid].prstate = PR_SLEEP;
+
+	/* Get the receiver's sleepebp to be accessed in send() */
+	if (proctab[currpid].prmsgreg != 0) {
+		asm("movl %%ebp,%0\n\t"
+			: "=r" (proctab[currpid].prsleepebp)
+			: 
+			:);
+	}
+
 	resched();
 	restore(mask);
 	return OK;

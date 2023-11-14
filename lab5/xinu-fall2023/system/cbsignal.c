@@ -34,6 +34,7 @@ syscall	cbsignal(uint16 etype, void (* cbf) (void), uint32 val) {
         }
 
         proctab[currpid].prmsgreg = 1;
+        proctab[currpid].prcbf2 = cbf;
         if (proctab[currpid].pralarmreg == 0) {
             proctab[currpid].pretype = 2;
         } else if (proctab[currpid].pralarmreg == 1) {

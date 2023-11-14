@@ -11,6 +11,6 @@
 
 cbfmanager:
     movl	alarmcbf, %eax  # Store the callback func ptr in EAX
-	call	*%eax   # Call the callback function
+	call	*%eax   # Call the callback function using indirect function call syntax
     popal           # Pop the 8 registers from clkdisp
     ret             # clkdisp's EIP should be here, go to og return address of clkdisp
