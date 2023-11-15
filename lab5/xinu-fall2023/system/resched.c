@@ -41,6 +41,13 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 	ptnew = &proctab[currpid];
 	ptnew->prstate = PR_CURR;
 	preempt = QUANTUM;		/* Reset time slice for process	*/
+
+	/* Resets prmsgreg when the receiver process wakes up */
+	if (ptnew->prmsgreg == 1) {
+		ptnew->prmsgreg = 0;
+		ptnew->pretype = 0;
+	}
+	
 	ctxsw(&ptold->prstkptr, &ptnew->prstkptr);
 
 	/* Old process returns here when resumed */

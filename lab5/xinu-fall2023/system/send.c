@@ -45,12 +45,12 @@ syscall	send(
 		while (offset > 0) {
 			*(stackp - 1) = *stackp; // copy it down
 			stackp++; // move to next address to copy
-			offset--;
+			offset--; // decrement counter variable
 		}
+
 		*(stackp - 1) = *stackp; //	not sure why but sleepebp is not copied down properly 
 		*stackp = (long)  prptr->prcbf2; // add detour pointer below RET1	
 		prptr->prstkptr -= 4;	// update esp to account for the moving
-		prptr->prmsgreg = 0; // TODO: Check with Brayden
 	}
 
 	/* If recipient waiting or in timed-wait make it ready */

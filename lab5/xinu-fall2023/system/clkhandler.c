@@ -21,7 +21,7 @@ void	clkhandler()
 		proctab[currpid].pralarmreg = 0;	// alarm should be handled directly after, so we can reset it to 0
 
 		/* Update pretype if there's an outstanding asynchronous message event */
-		if (proctab[currpid].prmsgreg != 0) { 
+		if (proctab[currpid].prmsgreg == 1) { 
 			proctab[currpid].pretype = 2;
 		}
 		
